@@ -1,0 +1,33 @@
+# manifests/nginxerino.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginxerino
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginxerino
+  template:
+    metadata:
+      labels:
+        app: nginxerino
+    spec:
+      containers:
+        - name: nginxerino
+          image: IMAGE_REPLACE
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxerino-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginxerino
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
