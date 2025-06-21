@@ -35,10 +35,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig \
-            --name ${{ secrets.AWS_CLUSTER_NAME }} \
-            --region ${{ secrets.AWS_REGION }}
+        run: aws eks update-kubeconfig --name ${{ secrets.AWS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
 
       - name: Substitute image placeholder in the Deployment manifest
         run: sed -i "s|IMAGE_REPLACE|${{ secrets.DOCKERHUB_USERNAME }}/nginxerino:${{ env.IMAGE_TAG }}|g" manifests/nginxerino.yaml
