@@ -1,5 +1,3 @@
-# .github/workflows/ci-cd.yaml test
-
 name: Deploy nginx to EKS
 
 on:
@@ -28,6 +26,7 @@ jobs:
           docker pull nginx:latest
           docker tag nginx:latest ${{ secrets.DOCKERHUB_USERNAME }}/nginxerino:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/nginxerino:latest
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -40,6 +39,7 @@ jobs:
           aws eks update-kubeconfig \
             --name ${{ secrets.AWS_CLUSTER_NAME }} \
             --region ${{ secrets.AWS_REGION }}
+
       - name: Substitute image placeholder in the Deployment manifest
         run: sed -i "s|IMAGE_REPLACE|${{ secrets.DOCKERHUB_USERNAME }}/nginxerino:${{ env.IMAGE_TAG }}|g" manifests/nginxerino.yaml
 
